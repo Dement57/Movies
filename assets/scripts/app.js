@@ -27,10 +27,22 @@ const clearMovieInputs = () => {
   }
 };
 
-const addMovieInList = (title, imageUrl, rating) => {
-  const newMovieCreate = document.createElement("li");
+const deleteMovieHandler = (movieId) => {
+  let movieIndex = 0;
+  for (const movie of movies) {
+    if (movie.Id === movieId) {
+      break;
+    }
+    movieIndex++;
+  }
+  movies.splice(movieIndex, 1);
   const movieList = document.getElementById("movie-list");
-  movieList.append(newMovieCreate);
+  movieList.children[movieIndex].remove();
+  updateUI();
+};
+
+const addMovieInList = (id, title, imageUrl, rating) => {
+  const newMovieCreate = document.createElement("li");
   newMovieCreate.className = "movie-element";
   newMovieCreate.innerHTML = `
     <div class="movie-element__image">
@@ -40,6 +52,9 @@ const addMovieInList = (title, imageUrl, rating) => {
       <h2>${title}</h2>
       <p>${rating}/5 stars</p>
     </div>`;
+  const movieList = document.getElementById('movie-list');
+  movieList.append(newMovieCreate);
+  newMovieCreate.addEventListener('click', deleteMovieHandler.bind(null, id));
 };
 
 const addMovieHandler = () => {
@@ -59,6 +74,7 @@ const addMovieHandler = () => {
 
   toggleModalWin();
   const newMovie = {
+    Id: Math.random().toString(),
     Title: TitleValue,
     Image: ImageValue,
     Rating: RatingValue
@@ -66,7 +82,7 @@ const addMovieHandler = () => {
   movies.push(newMovie);
   console.log(movies);
   clearMovieInputs();
-  addMovieInList(newMovie.Title, newMovie.Image, newMovie.Rating)
+  addMovieInList(newMovie.Id, newMovie.Title, newMovie.Image, newMovie.Rating);
   updateUI();
 };
 
